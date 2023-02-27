@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <title>Tic Tac Toe Game</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+  </head>
+  <body>
+    <div class="container">
+    <table>
+    <tr>
+      <td id="1"></td>
+      <td id="2"></td>
+      <td id="3"></td>
+    </tr>
+    <tr>
+      <td id="4"></td>
+      <td id="5"></td>
+      <td id="6"></td>
+    </tr>
+    <tr>
+      <td id="7"></td>
+      <td id="8"></td>
+      <td id="9"></td>
+    </tr>
+  </table>
+
+  <label id="User"></label>
+
+  <label id="UsernameLabel" for="UsernameInput">Username:</label>
+  <input type="text" id="UsernameInput" name="Username" required
+    minlength="4" maxlength="8" size="10">
+
+  <label id="PasswordLabel" for="PasswordInput">Password:</label>
+  <input type="text" id="PasswordInput" name="Password" required
+     minlength="4" maxlength="8" size="10">
+       
+  <button id="SignIn">Sign In</button>
+</div>
+  <script src="script.js"></script>
+  </body>
+</html>
