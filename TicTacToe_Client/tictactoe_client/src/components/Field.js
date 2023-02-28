@@ -68,15 +68,20 @@ function Field() {
     }, [yourTurn]);
 
     async function fieldClickHandler(event) {
-        if (event.target.innerHTML === "" && yourTurn && gameEnded !== 'true') {
-            event.target.innerHTML = playerSymbol;
-            event.target.classList.add(playerSymbol.toLowerCase());
+        Requests.matchStatus = await Requests.CheckMatchStatus();
+        
+        if (Requests.matchStatus === '1')
+        {
+            if (event.target.innerHTML === "" && yourTurn && gameEnded !== 'true') {
+                event.target.innerHTML = playerSymbol;
+                event.target.classList.add(playerSymbol.toLowerCase());
 
-            let y = Math.floor((event.target.id - 1) / 3);
-            let x = event.target.id - y * 3 - 1;
+                let y = Math.floor((event.target.id - 1) / 3);
+                let x = event.target.id - y * 3 - 1;
 
-            setGameEnded(await Requests.SendTurn({x, y}));
-            setYourTurn(!yourTurn);
+                setGameEnded(await Requests.SendTurn({x, y}));
+                setYourTurn(!yourTurn);
+            }
         }
     }
 

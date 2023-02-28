@@ -4,6 +4,7 @@ class Requests {
     static userGuid;
     static matchId;
     static yourTurnInit;
+    static matchStatus = -1;
     static get emptyGuid() {return "00000000-0000-0000-0000-000000000000"; }
 
     static async SignUpRequest(props) {

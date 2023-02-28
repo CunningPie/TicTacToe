@@ -13,8 +13,6 @@ function MatchesPage() {
     
     const navigate = useNavigate();
 
-    RefreshMatchesHandler();
-
     async function JoinMatchHandler(props){
         let matchIdInput = matchIdRef.current.value;
 
