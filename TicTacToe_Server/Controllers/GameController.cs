@@ -19,7 +19,15 @@ namespace TicTacToe_Server.Controllers
         [HttpPost("SendTurn")]
         public async Task<int> SendTurn(Guid matchId, Guid playerId, int x, int y)
         {
-            return await _matchesRepository.MakeTurn(matchId, playerId, x, y);
+            try
+            {
+                return await _matchesRepository.MakeTurn(matchId, playerId, x, y);
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return -1;
+            }
         }
 
         [HttpPost("CreateMatch")]
@@ -31,7 +39,15 @@ namespace TicTacToe_Server.Controllers
         [HttpPost("JoinMatch")]
         public async Task<bool> JoinMatch(Guid matchId, Guid playerId)
         {
-            return await _matchesRepository.JoinMatch(matchId, playerId);
+            try
+            {
+                return await _matchesRepository.JoinMatch(matchId, playerId);
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return false;
+            }
         }
 
         [HttpGet("LobbyMatches")]
@@ -68,6 +84,12 @@ namespace TicTacToe_Server.Controllers
         public async Task<string> RefreshField(Guid matchId)
         {
             return await _matchesRepository.GetField(matchId);
+        }
+
+        [HttpPost("GetStats")]
+        public async Task<List<int>> GetStats(Guid playerId)
+        {
+            return await _matchesRepository.GetStats(playerId);
         }
     }
 }

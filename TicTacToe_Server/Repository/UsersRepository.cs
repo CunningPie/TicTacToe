@@ -6,15 +6,7 @@
             {
                 new User
                 {
-                    Id = Guid.NewGuid(), Username = "peter", Password = "peter123"
-                },
-                new User
-                {
-                    Id = Guid.NewGuid(), Username = "joydip", Password = "joydip123"
-                },
-                new User
-                {
-                    Id = Guid.NewGuid(), Username = "james", Password = "james123"
+                    Id = Guid.NewGuid(), Username = "admin", Password = "admin"
                 }
             };
 

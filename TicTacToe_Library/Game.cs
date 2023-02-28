@@ -101,12 +101,12 @@ public class Game
 
     public int Move(int x, int y, int player)
     {
-        if (_field[x, y] == 0)
+        if (_field[y, x] == 0)
         {
-            _field[x, y] = player;
+            _field[y, x] = player;
         }
 
-        return CheckGameStatus(x, y);
+        return CheckGameStatus(y, x);
     }
 
     public string GetField()

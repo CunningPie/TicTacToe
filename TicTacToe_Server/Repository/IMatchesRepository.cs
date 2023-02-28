@@ -11,5 +11,6 @@
         Task<string> GetField(Guid matchId);
         Task<List<String>> GetFinishedMatchesId();
         Task<List<String>> GetMatchHistory(Guid matchId);
+        Task<List<int>> GetStats(Guid playerId);
     }
 }

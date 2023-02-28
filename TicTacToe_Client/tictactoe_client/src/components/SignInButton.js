@@ -22,7 +22,7 @@ function SignInButton() {
                 </button>
             </div>
         {signInModalIsOpen && <SignInModal onClose={closeSignInModalHandler}/>}
-        {signInModalIsOpen && <Backdrop onCancel={closeSignInModalHandler}/>}
+        {signInModalIsOpen && <Backdrop onClose={closeSignInModalHandler}/>}
         </div>
     );
 }

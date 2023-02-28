@@ -3,6 +3,7 @@ class Requests {
     static auth;
     static userGuid;
     static matchId;
+    static yourTurnInit;
     static get emptyGuid() {return "00000000-0000-0000-0000-000000000000"; }
 
     static async SignUpRequest(props) {
@@ -35,7 +36,6 @@ class Requests {
     }
 
     static async GetUsersRequest() {
-        alert(this.auth.Authorization)
         return fetch('https://localhost:7241/Auth', { headers : this.auth })
         .then(response => {
             if (response.status === 200)
@@ -79,8 +79,6 @@ class Requests {
     }
 
     static async CreateMatchRequest(props) {
-        alert(this.auth.Authorization);
-        alert(this.userGuid);
         return fetch('https://localhost:7241/Game/CreateMatch?' + new URLSearchParams({
             playerId: this.userGuid}), {method: 'POST', headers : this.auth})
         .then(response => {
@@ -138,6 +136,17 @@ class Requests {
     static async RefreshField(props) {
         return fetch('https://localhost:7241/Game/RefreshField?'+ new URLSearchParams({
             matchId: this.matchId}), {method: 'POST', headers : this.auth})
+        .then(response => {
+            if (response.status === 200)
+            {
+                return response.text();
+            }
+        });
+    }
+
+    static async GetStats(props) {
+        return fetch('https://localhost:7241/Game/GetStats?'+ new URLSearchParams({
+            playerId: this.userGuid}), {method: 'POST', headers : this.auth})
         .then(response => {
             if (response.status === 200)
             {

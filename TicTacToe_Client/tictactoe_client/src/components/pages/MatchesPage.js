@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {Requests} from '../../Requests'
@@ -6,7 +6,14 @@ import {Requests} from '../../Requests'
 function MatchesPage() {
     const matchIdRef = useRef();
     const lobbyMatchesRef = useRef();
+    const [wins, setWins] = useState();
+    const [draws, setDraws] = useState();
+    const [loses, setLoses] = useState();
+    const [rating, setRating] = useState();
+    
     const navigate = useNavigate();
+
+    RefreshMatchesHandler();
 
     async function JoinMatchHandler(props){
         let matchIdInput = matchIdRef.current.value;
@@ -35,8 +42,19 @@ function MatchesPage() {
 
     async function RefreshMatchesHandler(props){
         let matches = await Requests.GetLobbyMatchesRequest();
+        let stats = await Requests.GetStats();
 
-        if (matches)
+        let statsVals = stats.replace('[', '').replace(']', '').split(',')
+
+        if (statsVals.length === 4)
+        {
+            setWins(statsVals[0]);
+            setDraws(statsVals[1]);
+            setLoses(statsVals[2]);
+            setRating(statsVals[3]);
+        }
+
+        if (matches.length > 0)
         {
             lobbyMatchesRef.current.value = matches.replace('[', '').replace(']', '').replaceAll('"', '').split(',').join('\n');
         }
@@ -63,6 +81,12 @@ function MatchesPage() {
                     <button className="btn" onClick={CreateMatchHandler}>Create</button>
                     <button className="btn" onClick={HistoryHandler}>History</button>
                 </div>    
+            </div>
+            <div>
+                <label>Wins: {wins}</label>    
+                <label>Draws: {draws}</label>
+                <label>Loses: {loses}</label>
+                <label>Rating: {rating} </label>
             </div>
         </div>
     )

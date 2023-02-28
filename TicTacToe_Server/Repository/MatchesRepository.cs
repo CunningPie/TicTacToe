@@ -28,13 +28,13 @@ namespace TicTacToe_Server
             if (match.TurnOwner == playerId)
             {
                 var status = match.Game.Move(x, y, match.Player1Id == playerId ? 1 : 2);
-                match.History.Add("Player: " + playerId + " x: " + x + " y: " + y);
+                match.History.Add("Player: " + playerId + " x: " + x + " y: " + y + " put " + (match.Player1Id == playerId ? 'X' : 'O'));
                 if (status > 0)
                 {
-                    match.Status = Models.MatchStatus.Finished;
+                    match.Status = MatchStatus.Finished;
                     match.Winner = status == 1 ? playerId : Guid.Empty;
                     match.History.Add(status == 1 ? "Player " + playerId + " win" : "Draw");
-                }    
+                }
 
                 match.TurnOwner = match.GetOtherPlayerId(playerId);
                 return status;
@@ -45,7 +45,8 @@ namespace TicTacToe_Server
 
         public async Task<Guid> CreateMatch(Guid playerId)
         {
-            if (await Task.FromResult(GetLobbyMatches().SingleOrDefault(x => (x.Status != Models.MatchStatus.Finished) && (x.Player1Id == playerId ||
+            if (await Task.FromResult(GetLobbyMatches().SingleOrDefault(x => x.Status != Models.MatchStatus.Finished &&
+                                                                   (x.Player1Id == playerId ||
                                                                     x.Player2Id == playerId)) == null))
             {
                 var newMatchId = Guid.NewGuid();
@@ -58,14 +59,17 @@ namespace TicTacToe_Server
 
         public async Task<bool> JoinMatch(Guid matchId, Guid playerId)
         {
-            var match = await Task.FromResult(GetLobbyMatches().SingleOrDefault(x => x.Id == matchId));
+            var match = await Task.FromResult(GetLobbyMatches().SingleOrDefault(x => x.Id == matchId && x.Player1Id != playerId));
 
-            if (match != null)
+            lock (match)
             {
-                match.Player2Id = playerId;
-                match.Status = Models.MatchStatus.Started;
+                if (match != null)
+                {
+                    match.Player2Id = playerId;
+                    match.Status = Models.MatchStatus.Started;
 
-                return true;
+                    return true;
+                }
             }
 
             return false;
@@ -155,6 +159,23 @@ namespace TicTacToe_Server
             var field = await Task.FromResult(_matches.Single(x => x.Id == matchId));
 
             return field.Game.GetField();
+        }
+
+        public async Task<List<int>> GetStats(Guid playerId)
+        {
+            var playerMatches = await Task.FromResult(_matches.Where(x => (x.Player1Id == playerId || x.Player2Id == playerId) && x.Status == MatchStatus.Finished));
+            var wins = await Task.FromResult(playerMatches.Where(x => x.Winner == playerId));
+            var draws = await Task.FromResult(playerMatches.Where(x => x.Winner == Guid.Empty));
+            var loses = await Task.FromResult(playerMatches.Where(x => x.Winner != playerId && x.Winner != Guid.Empty));
+
+            var stats = new List<int>();
+
+            stats.Add(wins.Count());
+            stats.Add(draws.Count());
+            stats.Add(loses.Count());
+            stats.Add(stats[0] * 2 + stats[1]);
+
+            return stats;
         }
     }
 }

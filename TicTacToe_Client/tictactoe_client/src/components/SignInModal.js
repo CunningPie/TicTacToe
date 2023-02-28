@@ -15,14 +15,12 @@ function SignInModal(props) {
         if (usernameInput.trim() !== "" && passwordInput.trim() !== "")
         {
             let requestResult = await Requests.SignInRequest({username : usernameInput, password : passwordInput});
-            requestResult = requestResult.replaceAll('\"', '');
+            requestResult = requestResult.replaceAll('"', '');
 
             if (requestResult !== "00000000-0000-0000-0000-000000000000")
             {
                 Requests.userGuid = requestResult;
                 props.onClose();
-                let users = await Requests.GetUsersRequest();
-                alert(users);
                 navigate('/matches');
             }
             else
